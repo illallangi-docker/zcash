@@ -1,0 +1,24 @@
+---
+- hosts: all
+  tasks:
+    - yum:
+        name:  "{{ item }}"
+        state: "present"
+      with_items:
+        - "libgomp"
+    - file:
+        path:  "/usr/local/bin/{{ item }}"
+        owner: "root"
+        group: "root"
+        mode:  "0755"
+      with_items:
+        - "zcash-cli"
+        - "zcash-gtest"
+        - "zcash-tx"
+        - "zcashd"
+    - user:
+        name:  "zcash"
+        state: "present"
+        home:  "/var/lib/zcash"
+        uid:   1061
+  

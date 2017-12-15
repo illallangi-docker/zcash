@@ -1,0 +1,32 @@
+---
+- hosts: all
+  tasks:
+    - yum:
+        name:  "{{ item }}"
+        state: "present"
+      with_items:
+        - "wget"
+        - "make"
+        - "gcc"
+        - "gcc-c++"
+        - "lbzip2"
+        - "patch"
+        - "perl"
+        - "automake"
+        - "libtool"
+    - get_url:
+        url:      "{{ item.url }}"
+        dest:     "{{ item.dest }}"
+        checksum: "{{ item.checksum }}"
+      with_items:
+        - url:      "https://github.com/zcash/zcash/archive/019c4bddc83445f690bdcdc759953de8d8112862.tar.gz"
+          dest:     "/usr/local/src/zcash-019c4bddc83445f690bdcdc759953de8d8112862.tar.gz"
+          checksum: "sha256:513e041ac2f9e840e09d99ee80c28ccb832bd90d62061456b4346cdc59a9addf"
+    - unarchive:
+        src:     "/usr/local/src/zcash-019c4bddc83445f690bdcdc759953de8d8112862.tar.gz"
+        dest:    "/usr/local/src"
+        creates: "/usr/local/src/zcash-019c4bddc83445f690bdcdc759953de8d8112862/README.md"
+    - command:
+        "/usr/local/src/zcash-019c4bddc83445f690bdcdc759953de8d8112862/zcutil/build.sh --disable-rust"
+      args:
+        creates: "/usr/local/src/zcash-019c4bddc83445f690bdcdc759953de8d8112862/src/zcashd"
