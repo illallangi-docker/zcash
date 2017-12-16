@@ -1,8 +1,8 @@
-FROM illallangi/base:latest as build
+FROM illallangi/ansible:latest as build
 COPY build/* /etc/ansible.d/build/
 RUN /usr/local/bin/ansible-runner.sh build
 
-FROM illallangi/base:latest as image
+FROM illallangi/ansible:latest as image
 
 COPY --from=build /usr/local/src/*.tar.gz /usr/local/src/
 COPY --from=build /usr/local/src/zcash-019c4bddc83445f690bdcdc759953de8d8112862/src/zcash-cli /usr/local/bin/
